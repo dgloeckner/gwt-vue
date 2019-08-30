@@ -1,0 +1,41 @@
+*.class
+
+*.jar
+*.war
+*.ear
+
+*.swp
+*.iml
+
+.idea
+
+target
+server/target
+shared/target
+web/target
+web/src/main/webapp/dist/**
+web/src/main/webapp/package-lock.json
+vuecomponent/dist/**
+vuecomponent/node_modules/**
+
+.DS_Store
+node_modules
+/dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
