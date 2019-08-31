@@ -1,11 +1,6 @@
 <template>
   <div>
     <button v-on:click="incrementCounter" class="gwt-Button sendButton">{{ msg }} {{ count }} times.</button>
-    <table>
-      <tr v-for="item in lst" :key="item">
-        <td>Item: {{ item }}</td>
-      </tr>
-    </table>
   </div>
 </template>
 
@@ -17,7 +12,6 @@ export default {
   },
   data: function() {
     return {
-      lst: [],
       count: 0
     };
   },
@@ -27,10 +21,11 @@ export default {
     }
   },
   mounted() {
-    middleware.app.$on("send-clicked", () => {
-      this.count++;
-      this.lst.push(this.count);
-    });
+    if (middleware) {
+       middleware.app.$on("send-clicked", (data) => {
+         this.count++;
+       });
+    }
   }
 };
 </script>

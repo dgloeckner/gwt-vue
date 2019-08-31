@@ -1,11 +1,14 @@
 import Vue from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 import App from './App.vue'
 
 Vue.config.productionTip = false;
+Vue.use(VueAxios, axios);
 
-//new Vue({
-//  render: h => h(App),
-//}).$mount('#app');
+/*new Vue({
+  render: h => h(App),
+}).$mount('#app');*/
 
 (function(global) {
 
@@ -14,10 +17,10 @@ Vue.config.productionTip = false;
   });
 
   // Called from GWT
-  const sendClicked = () => {
+  const emitEvent = (topic, data) => {
     // eslint-disable-next-line no-console
       console.log('Send clicked VUE');
-    app.$emit('send-clicked');
+    app.$emit(topic, data);
   }
 
   const addCallback = (callback) => {
@@ -26,7 +29,7 @@ Vue.config.productionTip = false;
 
   const Middleware = {
       app,
-      sendClicked,
+      emitEvent,
       addCallback
     }
 

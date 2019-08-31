@@ -4,6 +4,7 @@ import com.google.gwt.core.client.Callback;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
 public class VueWidget extends Widget {
@@ -12,13 +13,16 @@ public class VueWidget extends Widget {
 
   Callback<String, Throwable> callback;
 
-  public VueWidget() {
+  private final String elementId;
+
+  public VueWidget(String tagName) {
+    elementId = tagName +  "-" + DOM.createUniqueId();
     divElement = Document.get().createDivElement();
     DivElement mainElement = Document.get().createDivElement();
     mainElement.appendChild(divElement);
-    divElement.setId("vueWidget");
+    divElement.setId(elementId);
     // Instantiate the top-level vue.js component
-    Element buttonCounter = Document.get().createElement("button-counter");
+    Element buttonCounter = Document.get().createElement(tagName);
     divElement.appendChild(buttonCounter);
     setElement(mainElement);
   }
@@ -26,8 +30,7 @@ public class VueWidget extends Widget {
   @Override
   public void onLoad() {
     super.onLoad();
-    //registerVueComponent();
-    mountVueInstance(divElement);
+    mountVueInstance(elementId);
   }
 
   @Override
@@ -36,16 +39,12 @@ public class VueWidget extends Widget {
     // TODO: Dispose vue instance
   }
 
-  private native void mountVueInstance(Element element)/*-{
-      $wnd.middleware.app.$mount("#vueWidget");
-   }-*/;
-
-  private native void registerVueComponent()/*-{
-      $wnd.middleware.registerVueComponent();
+  private native void mountVueInstance(String id)/*-{
+      $wnd.middleware.app.$mount("#" + id);
    }-*/;
 
   public native void sendClicked()/*-{
-      $wnd.middleware.sendClicked();
+      $wnd.middleware.emitEvent('send-clicked', 'the data');
    }-*/;
 
   public void setCallback(Callback<String, Throwable> callback) {

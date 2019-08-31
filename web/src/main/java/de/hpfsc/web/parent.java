@@ -16,20 +16,20 @@ public class parent implements EntryPoint {
     final Button sendButton = new Button("GWT - you clicked the Vue button "
         + count + " times");
     sendButton.addStyleName("sendButton");
-    final VueWidget vueWidget = new VueWidget();
+    final VueWidget buttonCounter = new VueWidget("button-counter");
 
     RootPanel.get("gwtButtonContainer").add(sendButton);
-    RootPanel.get("vueButtonContainer").add(vueWidget);
+    RootPanel.get("vueButtonContainer").add(buttonCounter);
 
     sendButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent event) {
         GWT.log("GWT --> onclick");
         // Send event to Vue component
-        vueWidget.sendClicked();
+        buttonCounter.sendClicked();
       }
     });
-    vueWidget.setCallback(new Callback<String, Throwable>() {
+    buttonCounter.setCallback(new Callback<String, Throwable>() {
       @Override
       public void onFailure(Throwable reason) {
 
