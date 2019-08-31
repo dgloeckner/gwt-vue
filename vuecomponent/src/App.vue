@@ -14,6 +14,12 @@ export default {
   components: {
     HelloWorld,
     JsonResult
+  },
+  mounted() {
+    console.log('subscribe to event for ' + this);
+    this.$on("send-clicked", data => {
+      console.log("parent was fired");
+    });
   }
 }
 </script>

@@ -13,10 +13,13 @@ public class VueWidget extends Widget {
 
   Callback<String, Throwable> callback;
 
+  private final String tagName;
+
   private final String elementId;
 
   public VueWidget(String tagName) {
-    elementId = tagName +  "-" + DOM.createUniqueId();
+    this.tagName = tagName;
+    elementId = tagName + "-" + DOM.createUniqueId();
     divElement = Document.get().createDivElement();
     DivElement mainElement = Document.get().createDivElement();
     mainElement.appendChild(divElement);
@@ -30,7 +33,7 @@ public class VueWidget extends Widget {
   @Override
   public void onLoad() {
     super.onLoad();
-    mountVueInstance(elementId);
+    mountVueInstance(elementId, tagName );
   }
 
   @Override
@@ -39,17 +42,21 @@ public class VueWidget extends Widget {
     // TODO: Dispose vue instance
   }
 
-  private native void mountVueInstance(String id)/*-{
-      $wnd.middleware.app.$mount("#" + id);
+  private native void mountVueInstance(String id, String tagName)/*-{
+      $wnd.middleware.createComponent(id, tagName);
    }-*/;
 
-  public native void sendClicked()/*-{
-      $wnd.middleware.emitEvent('send-clicked', 'the data');
+  public void sendClicked() {
+     emitEvent(this.elementId);
+  }
+
+  private native void emitEvent(String id)/*-{
+      $wnd.middleware.emitEvent(id, 'send-clicked', 'the data');
    }-*/;
 
   public void setCallback(Callback<String, Throwable> callback) {
-     this.callback = callback;
-     registerCallback();
+    this.callback = callback;
+    registerCallback();
   }
 
   private native void registerCallback() /*-{

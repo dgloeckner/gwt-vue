@@ -42,6 +42,8 @@ public class parent implements EntryPoint {
             + ++count + " times");
       }
     });
+    VueWidget jsonResult = new VueWidget("json-result");
+    RootPanel.get().add(jsonResult);
 
   }
 }

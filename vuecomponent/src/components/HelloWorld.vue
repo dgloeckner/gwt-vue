@@ -1,15 +1,15 @@
 <template>
   <div>
-    <button v-on:click="incrementCounter" class="gwt-Button sendButton">{{ msg }} {{ count }} times.</button>
+    <button v-on:click="incrementCounter" class="gwt-Button sendButton">GWT button was clicked {{ count }} times.</button>
   </div>
 </template>
 
 <script>
+import { EventBus } from '../event-bus';
+
 export default {
   name: "HelloWorld",
-  props: {
-    msg: String
-  },
+  props: ['compId'],
   data: function() {
     return {
       count: 0
@@ -21,11 +21,11 @@ export default {
     }
   },
   mounted() {
-    if (middleware) {
-       middleware.app.$on("send-clicked", (data) => {
-         this.count++;
-       });
-    }
+    // Subscribe to a specific event for this component.
+    EventBus.$on(this.compId + "send-clicked", data => {
+      this.count++;
+    });
+    
   }
 };
 </script>
