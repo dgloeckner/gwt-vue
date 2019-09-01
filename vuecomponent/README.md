@@ -6,30 +6,6 @@ and fast build cycles.
 GWT integration is achieved by piping `parent.html` for the
  GWT module through `webpack`.
 
-## Project setup
-```
-npm install
-```
-``
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+For standalone vue.js development please see `vuecomponent-dev` module.
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Integrated build is triggered from `build-vue-and-gwt.sh`.

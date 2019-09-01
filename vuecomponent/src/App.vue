@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <GwtMockEnvironment/>
     <HelloWorld msg="vue.js - you clicked the GWT button "/>
     <JsonResult/>
   </div>
@@ -8,12 +9,14 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import JsonResult from './components/JsonResultRenderer'
+import GwtMockEnvironment from './components/GwtMockEnvironment';
 
 export default {
   name: 'app',
   components: {
     HelloWorld,
-    JsonResult
+    JsonResult,
+    GwtMockEnvironment
   },
   mounted() {
     console.log('subscribe to event for ' + this);

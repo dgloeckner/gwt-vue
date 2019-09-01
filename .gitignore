@@ -17,6 +17,8 @@ web/src/main/webapp/dist/**
 web/src/main/webapp/package-lock.json
 vuecomponent/dist/**
 vuecomponent/node_modules/**
+vuecomponent-dev/dist/**
+vuecomponent-dev/node_modules/**
 
 .DS_Store
 node_modules

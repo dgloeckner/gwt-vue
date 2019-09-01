@@ -1,26 +1,21 @@
 import Vue from "vue";
 import axios from "axios";
 import VueAxios from "vue-axios";
-//import App from './App.vue'
-import HelloWorld from "./components/HelloWorld.vue";
+import ButtonCounter from "./components/ButtonCounter";
 import JsonResult from "./components/JsonResultRenderer";
 import { EventBus } from "./event-bus";
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
 
-/*new Vue({
-  render: h => h(App),
-}).$mount('#app');*/
-
 (function(global) {
-  const apps = new Map();
+  const components = new Map();
 
   const createComponent = (id, type) => {
     var compType = null;
     switch (type) {
       case "button-counter":
-        compType = HelloWorld;
+        compType = ButtonCounter;
         break;
       case "json-result":
         compType = JsonResult;
@@ -38,7 +33,7 @@ Vue.use(VueAxios, axios);
     });
 
     comp.$mount("#" + id);
-    apps.set(id, comp);
+    components.set(id, comp);
   };
 
   // Send GWT events to vue.js components.
@@ -52,7 +47,7 @@ Vue.use(VueAxios, axios);
   };
 
   const Middleware = {
-    apps,
+    components,
     emitEvent,
     onEvent,
     createComponent
