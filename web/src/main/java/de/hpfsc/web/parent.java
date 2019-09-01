@@ -23,14 +23,16 @@ public class parent implements EntryPoint {
     RootPanel.get("gwtButtonContainer").add(sendButton);
     RootPanel.get("vueButtonContainer").add(buttonCounter);
 
+    // Send events to vue.
     sendButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent event) {
         // Send event to Vue component
-        buttonCounter.emitEvent("send-clicked", "Some data 123");
+        buttonCounter.sendEvent("gwt-send-clicked", "Some data 123");
       }
     });
-    buttonCounter.setCallback(new Callback<String, Throwable>() {
+    // Receive events from vue.
+    buttonCounter.onEvent("vue-send-clicked", new Callback<String, Throwable>() {
       @Override
       public void onFailure(Throwable reason) {
 
@@ -38,7 +40,6 @@ public class parent implements EntryPoint {
 
       @Override
       public void onSuccess(String result) {
-        GWT.log("Was called back from vue - " + result);
         sendButton.setText("GWT - you clicked the Vue button "
             + ++count + " times");
       }

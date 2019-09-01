@@ -41,20 +41,20 @@ Vue.use(VueAxios, axios);
     apps.set(id, comp);
   };
 
-  // Called from GWT
+  // Send GWT events to vue.js components.
   const emitEvent = (id, topic, data) => {
     EventBus.$emit(id + topic, data);
   };
 
-  // TODO: implement subscribe by id, topic
-  const addCallback = callback => {
-    global.middleware.callback = callback;
+  // Subscribe to vue.js events from GWT.
+  const onEvent = (id, topic, callback) => {
+    EventBus.$on(id + topic, callback);
   };
 
   const Middleware = {
     apps,
     emitEvent,
-    addCallback,
+    onEvent,
     createComponent
   };
 

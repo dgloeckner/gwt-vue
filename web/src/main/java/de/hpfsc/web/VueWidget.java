@@ -1,11 +1,16 @@
 package de.hpfsc.web;
 
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Generic widget which instantiates a <code>Vue.js</code> component, which actually is a Vue
@@ -16,11 +21,11 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class VueWidget extends Widget {
 
-  Callback<String, Throwable> callback;
-
   private final String tagName;
 
   private final String elementId;
+
+  private final Map<String, Set<Callback<String, Throwable>>> callbacksByTopic = new HashMap<String, Set<Callback<String, Throwable>>>();
 
   public VueWidget(String tagName) {
     this.tagName = tagName;
@@ -43,13 +48,13 @@ public class VueWidget extends Widget {
   @Override
   public void onUnload() {
     super.onUnload();
-    // TODO: Dispose vue instance
+    // TODO: Dispose vue instance, remove listeners from event bus...
   }
 
   /**
-   * Emits an event so the Vue component will be notified.
+   * Sends an event so the Vue component will be notified.
    */
-  public void emitEvent(String topic, Object data) {
+  public void sendEvent(String topic, Object data) {
     emitEvent(this.elementId, topic, data);
   }
 
@@ -57,21 +62,37 @@ public class VueWidget extends Widget {
       $wnd.middleware.emitEvent(id, topic, data);
    }-*/;
 
-  public void setCallback(Callback<String, Throwable> callback) {
-    this.callback = callback;
-    registerCallback();
+  /**
+   * Registers a callback which gets notified for events from the Vue component for the given
+   * topic.
+   */
+  public void onEvent(String topic, Callback<String, Throwable> callback) {
+    Set<Callback<String, Throwable>> cbs = callbacksByTopic.get(topic);
+    if (cbs == null) {
+      cbs = new HashSet<>();
+      callbacksByTopic.put(topic, cbs);
+    }
+    cbs.add(callback);
+    registerCallback(this.elementId, topic);
   }
 
-  private native void registerCallback() /*-{
+  private native void registerCallback(String id, String topic) /*-{
     var self = this;
+    var theTopic = topic;
     var callbackFn = $entry(function(val) {
-      self.@de.hpfsc.web.VueWidget::handleCallback(Ljava/lang/String;)(val);
+      self.@de.hpfsc.web.VueWidget::handleCallback(Ljava/lang/String;Ljava/lang/String;)(topic, val);
     });
-    $wnd.middleware.addCallback(callbackFn);
+    $wnd.middleware.onEvent(id, topic, callbackFn);
   }-*/;
 
-  public void handleCallback(String val) {
-    callback.onSuccess(val);
+  public void handleCallback(String topic, String val) {
+    GWT.log(topic);
+    Set<Callback<String, Throwable>> cbs = callbacksByTopic.get(topic);
+    if (cbs != null) {
+      for (Callback<String, Throwable> cb : cbs) {
+        cb.onSuccess(val);
+      }
+    }
   }
 
   private native void createComponent(String id, String tagName)/*-{

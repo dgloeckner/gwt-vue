@@ -9,6 +9,7 @@ import { EventBus } from '../event-bus';
 
 export default {
   name: "HelloWorld",
+  // Component ID is needed for sending and receiving component-specific events via the event bus.
   props: ['compId'],
   data: function() {
     return {
@@ -16,13 +17,14 @@ export default {
     };
   },
   methods: {
+    // Notify GWT.
     incrementCounter: function(event) {
-      middleware.callback("Hello from vue button");
+      EventBus.$emit(this.compId + "vue-send-clicked", "Hello from vue button");
     }
   },
   mounted() {
-    // Subscribe to a specific event for this component.
-    EventBus.$on(this.compId + "send-clicked", data => {
+    // Subscribe to a specific event from GWT for this component.
+    EventBus.$on(this.compId + "gwt-send-clicked", data => {
       this.count++;
     });
     
