@@ -13,9 +13,11 @@ public class parent implements EntryPoint {
   int count = 0;
 
   public void onModuleLoad() {
+    // A GWT button.
     final Button sendButton = new Button("GWT - you clicked the Vue button "
         + count + " times");
     sendButton.addStyleName("sendButton");
+    // A Vue.js button.
     final VueWidget buttonCounter = new VueWidget("button-counter");
 
     RootPanel.get("gwtButtonContainer").add(sendButton);
@@ -24,9 +26,8 @@ public class parent implements EntryPoint {
     sendButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent event) {
-        GWT.log("GWT --> onclick");
         // Send event to Vue component
-        buttonCounter.sendClicked();
+        buttonCounter.emitEvent("send-clicked", "Some data 123");
       }
     });
     buttonCounter.setCallback(new Callback<String, Throwable>() {
@@ -42,6 +43,7 @@ public class parent implements EntryPoint {
             + ++count + " times");
       }
     });
+    // Another vue.js component.
     VueWidget jsonResult = new VueWidget("json-result");
     RootPanel.get().add(jsonResult);
 
