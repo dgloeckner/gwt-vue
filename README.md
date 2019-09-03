@@ -33,3 +33,9 @@ Now, you need to build Vue.js components and start GWT Dev Mode. Open a second s
     build-vue-and-gwt.sh
 
 On success, the GWT Dev Mode window opens. Click *Launch Default Browser* to open it in GWT Dev Mode.
+
+What if GWT page does not update?
+---------------------------------
+Try `mvn clean install`, start `mvn tomcat7:run-war-only` again and finally run  `build-vue-and-gwt.sh` 
+in a separate terminal. 
+

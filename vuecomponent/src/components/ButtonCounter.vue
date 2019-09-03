@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button v-on:click="incrementCounter" class="gwt-Button sendButton">GWT button was clicked {{ count }} times.</button>
+    <button v-on:click="incrementCounter" class="gwt-Button sendButton">Vue.js - GWT button was clicked {{ count }} times.</button>
   </div>
 </template>
 
