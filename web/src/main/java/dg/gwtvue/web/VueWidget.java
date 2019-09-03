@@ -1,4 +1,4 @@
-package de.hpfsc.web;
+package dg.gwtvue.web;
 
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
@@ -80,12 +80,12 @@ public class VueWidget extends Widget {
     var self = this;
     var theTopic = topic;
     var callbackFn = $entry(function(val) {
-      self.@de.hpfsc.web.VueWidget::handleCallback(Ljava/lang/String;Ljava/lang/String;)(topic, val);
+      self.@dg.gwtvue.web.VueWidget::handleCallback(Ljava/lang/String;Ljava/lang/String;)(topic, val);
     });
     $wnd.middleware.onEvent(id, topic, callbackFn);
   }-*/;
 
-  public void handleCallback(String topic, String val) {
+  private void handleCallback(String topic, String val) {
     GWT.log(topic);
     Set<Callback<String, Throwable>> cbs = callbacksByTopic.get(topic);
     if (cbs != null) {

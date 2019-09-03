@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cd vuecomponent
-export GWT=1
+# TODO maybe clean and install npm packages here???
 npm run build
 
 # TODO: this is ugly... can we run GWT dev mode from a different directory??
