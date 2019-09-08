@@ -1,18 +1,28 @@
 import Vue from "vue";
 import axios from "axios";
 import VueAxios from "vue-axios";
-import ButtonCounter from "./components/ButtonCounter";
-import JsonResult from "./components/JsonResultRenderer";
+import ButtonCounter from "./components/ButtonCounter.vue";
+import JsonResult from "./components/JsonResultRenderer.vue";
 import { EventBus } from "./event-bus";
+import IGithubApi from './services/IGithubApi';
+import GithubApiService from './services/HttpGithubApi';
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
 
-(function(global) {
+// Extend Window type with our property.
+declare global {
+  interface Window { Middleware: any; }
+}
+
+// Define the middleware for Vue / GWT interaction.
+(function(window) {
   const components = new Map();
 
-  const createComponent = (id, type) => {
-    var compType = null;
+  const githubApi: IGithubApi = new GithubApiService()
+
+  const createComponent = (id: any, type: any) => {
+    var compType: any;
     switch (type) {
       case "button-counter":
         compType = ButtonCounter;
@@ -29,7 +39,12 @@ Vue.use(VueAxios, axios);
           props: {
             compId: id
           }
-        })
+        }),
+      provide: {
+        // Here we bind services for dependency injection.
+        // Those can be mocked for testing.
+        githubApi
+      }
     });
 
     comp.$mount("#" + id);
@@ -37,12 +52,12 @@ Vue.use(VueAxios, axios);
   };
 
   // Send GWT events to vue.js components.
-  const emitEvent = (id, topic, data) => {
+  const emitEvent = (id: string, topic: string, data: any) => {
     EventBus.$emit(id + topic, data);
   };
 
   // Subscribe to vue.js events from GWT.
-  const onEvent = (id, topic, callback) => {
+  const onEvent = (id: string, topic: string, callback: Function) => {
     EventBus.$on(id + topic, callback);
   };
 
@@ -53,5 +68,6 @@ Vue.use(VueAxios, axios);
     createComponent
   };
 
-  global.middleware = Middleware;
+  // Register the middleware in global scope.
+  window.Middleware = Middleware;
 })(window);

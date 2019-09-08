@@ -1,34 +1,33 @@
 <template>
   <div>
-    <button v-on:click="incrementCounter" class="gwt-Button sendButton">Vue.js - GWT button was clicked {{ count }} times.</button>
+    <button
+      @click="incrementCounter"
+      class="gwt-Button sendButton"
+    >
+Vue.js - GWT button was clicked {{ count }} times.
+</button>
   </div>
 </template>
 
-<script>
-import { EventBus } from '../event-bus';
+<script lang="ts">
+import Parent from './Parent.vue'
+import { Component } from 'vue-property-decorator'
 
-export default {
-  name: "HelloWorld",
-  // Component ID is needed for sending and receiving component-specific events via the event bus.
-  props: ['compId'],
-  data: function() {
-    return {
-      count: 0
-    };
-  },
-  methods: {
-    // Notify GWT.
-    incrementCounter: function(event) {
-      EventBus.$emit(this.compId + "vue-send-clicked", "Hello from vue button");
+@Component({
+  name: 'HelloWorld'
+})
+export default class ButtonCounter extends Parent {
+    count: number = 0;
+
+    incrementCounter () {
+      this.emitEvent('vue-send-clicked', 'Hello from vue button')
     }
-  },
-  mounted() {
-    // Subscribe to a specific event from GWT for this component.
-    EventBus.$on(this.compId + "gwt-send-clicked", data => {
-      this.count++;
-    });
-    
-  }
+
+    mounted () {
+      this.onEvent('gwt-send-clicked', (data: any) => {
+        this.count++
+      })
+    }
 };
 </script>
 

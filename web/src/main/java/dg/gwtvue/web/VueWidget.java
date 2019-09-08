@@ -59,7 +59,7 @@ public class VueWidget extends Widget {
   }
 
   private native void emitEvent(String id, String topic, Object data)/*-{
-      $wnd.middleware.emitEvent(id, topic, data);
+      $wnd.Middleware.emitEvent(id, topic, data);
    }-*/;
 
   /**
@@ -82,7 +82,7 @@ public class VueWidget extends Widget {
     var callbackFn = $entry(function(val) {
       self.@dg.gwtvue.web.VueWidget::handleCallback(Ljava/lang/String;Ljava/lang/String;)(topic, val);
     });
-    $wnd.middleware.onEvent(id, topic, callbackFn);
+    $wnd.Middleware.onEvent(id, topic, callbackFn);
   }-*/;
 
   private void handleCallback(String topic, String val) {
@@ -96,6 +96,6 @@ public class VueWidget extends Widget {
   }
 
   private native void createComponent(String id, String tagName)/*-{
-      $wnd.middleware.createComponent(id, tagName);
+      $wnd.Middleware.createComponent(id, tagName);
    }-*/;
 }
