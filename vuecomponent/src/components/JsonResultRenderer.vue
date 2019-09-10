@@ -33,13 +33,12 @@ export default class JsonResultRenderer extends Parent {
   query: String = 'tetris+language:assembly'
   gridOptions: any
 
-  fetchJSon () {
+  async fetchJSon () {
     this.rowData = []
-    this.githubApi.fetchResults(this.query)
-      .then(response => {
-        console.log(response.data)
-        this.rowData = response.data.items
-      })
+    // We may use `await`to tell the JS compiler to generate code which takes care of the async result.
+    // This will not "freeze" the UI!
+    const githubResult: any = await this.githubApi.fetchResults(this.query)
+    this.rowData = githubResult.data.items
   }
   onRowDataChanged () {
     Vue.nextTick(() => {
