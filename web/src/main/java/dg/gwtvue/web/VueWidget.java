@@ -1,16 +1,13 @@
 package dg.gwtvue.web;
 
-import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import dg.gwtvue.web.jsinterop.EventListenerCallback;
+import dg.gwtvue.web.jsinterop.JsWindowWrapper;
 
 /**
  * Generic widget which instantiates a <code>Vue.js</code> component, which actually is a Vue
@@ -25,15 +22,16 @@ public class VueWidget extends Widget {
 
   private final String elementId;
 
-  private final Map<String, Set<Callback<String, Throwable>>> callbacksByTopic = new HashMap<String, Set<Callback<String, Throwable>>>();
-
   public VueWidget(String tagName) {
+    // Tag name identifies the component type in Vue.js.
     this.tagName = tagName;
+    // Create a unique ID for our component.
     elementId = tagName + "-" + DOM.createUniqueId();
     Element divElement = Document.get().createDivElement();
     DivElement mainElement = Document.get().createDivElement();
     mainElement.appendChild(divElement);
     divElement.setId(elementId);
+    // Create a child element with the tag name matching the desired component.
     Element componentElement = Document.get().createElement(tagName);
     divElement.appendChild(componentElement);
     setElement(mainElement);
@@ -42,7 +40,7 @@ public class VueWidget extends Widget {
   @Override
   public void onLoad() {
     super.onLoad();
-    createComponent(elementId, tagName);
+    JsWindowWrapper.Middleware.createComponent(elementId, tagName);
   }
 
   @Override
@@ -55,47 +53,15 @@ public class VueWidget extends Widget {
    * Sends an event so the Vue component will be notified.
    */
   public void sendEvent(String topic, Object data) {
-    emitEvent(this.elementId, topic, data);
+    GWT.log("Send event to Vue");
+    JsWindowWrapper.Middleware.emitEvent(this.elementId, topic, data);
   }
-
-  private native void emitEvent(String id, String topic, Object data)/*-{
-      $wnd.Middleware.emitEvent(id, topic, data);
-   }-*/;
 
   /**
    * Registers a callback which gets notified for events from the Vue component for the given
    * topic.
    */
-  public void onEvent(String topic, Callback<String, Throwable> callback) {
-    Set<Callback<String, Throwable>> cbs = callbacksByTopic.get(topic);
-    if (cbs == null) {
-      cbs = new HashSet<>();
-      callbacksByTopic.put(topic, cbs);
-    }
-    cbs.add(callback);
-    registerCallback(this.elementId, topic);
+  public void onEvent(String topic, EventListenerCallback callback) {
+    JsWindowWrapper.Middleware.onEvent(this.elementId, topic, callback);
   }
-
-  private native void registerCallback(String id, String topic) /*-{
-    var self = this;
-    var theTopic = topic;
-    var callbackFn = $entry(function(val) {
-      self.@dg.gwtvue.web.VueWidget::handleCallback(Ljava/lang/String;Ljava/lang/String;)(topic, val);
-    });
-    $wnd.Middleware.onEvent(id, topic, callbackFn);
-  }-*/;
-
-  private void handleCallback(String topic, String val) {
-    GWT.log(topic);
-    Set<Callback<String, Throwable>> cbs = callbacksByTopic.get(topic);
-    if (cbs != null) {
-      for (Callback<String, Throwable> cb : cbs) {
-        cb.onSuccess(val);
-      }
-    }
-  }
-
-  private native void createComponent(String id, String tagName)/*-{
-      $wnd.Middleware.createComponent(id, tagName);
-   }-*/;
 }
