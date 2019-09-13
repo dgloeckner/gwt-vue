@@ -1,9 +1,10 @@
-import Vue from "vue";
+import Vue from 'vue';
+
 import ButtonCounter from './components/ButtonCounter.vue';
-import JsonResult from "./components/JsonResultRenderer.vue";
+import JsonResult from './components/JsonResultRenderer.vue';
 import SubscribedLabel from './components/SubscribedLabel.vue';
-import IGithubApi from './services/IGithubApi';
 import GithubApiService from './services/HttpGithubApi';
+import IGithubApi from './services/IGithubApi';
 
 export default class ComponentFactory {
   githubApi: IGithubApi = new GithubApiService()

@@ -1,8 +1,9 @@
-import Vue from "vue"
-import axios from "axios"
-import VueAxios from "vue-axios"
-import { EventBus } from "./event-bus"
-import ComponentFactory from './component-factory'
+import axios from 'axios';
+import Vue from 'vue';
+import VueAxios from 'vue-axios';
+
+import ComponentFactory from './component-factory';
+import { EventBus } from './event-bus';
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
