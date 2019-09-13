@@ -1,11 +1,11 @@
 <template>
   <div>
     <button
-      @click="incrementCounter"
       class="gwt-Button sendButton"
+      @click="incrementCounter"
     >
-Vue.js - GWT button was clicked {{ count }} times.
-</button>
+      Vue.js - GWT button was clicked {{ count }} times.
+    </button>
   </div>
 </template>
 
@@ -17,18 +17,18 @@ import { Component } from 'vue-property-decorator'
   name: 'HelloWorld'
 })
 export default class ButtonCounter extends Parent {
-    count: number = 0;
+  count: number = 0;
 
-    incrementCounter () {
-      this.emitEvent('vue-send-clicked', 'Hello from vue button')
-    }
+  incrementCounter () {
+    this.emitEvent('vue-send-clicked', 'Hello from vue button')
+  }
 
-    mounted () {
-      this.onEvent('gwt-send-clicked', (data: any) => {
-        this.count++
-      })
-    }
-};
+  mounted () {
+    this.onEvent('gwt-send-clicked', (data: any) => {
+      this.count++
+    })
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

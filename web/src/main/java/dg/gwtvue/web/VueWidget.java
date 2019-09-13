@@ -46,7 +46,7 @@ public class VueWidget extends Widget {
   @Override
   public void onUnload() {
     super.onUnload();
-    // TODO: Dispose vue instance, remove listeners from event bus...
+    JsWindowWrapper.Middleware.disposeComponent(elementId);
   }
 
   /**
